@@ -1,9 +1,12 @@
 package main
 
-import "fmt"
+import (
+	c "GoSearch/pkg/crawler"
+)
 
 func main() {
 	ParseArgs()
-
-	fmt.Println(search)
+	var crawler c.Crawler = c.CreateCrawler("https://go.dev", "go.dev")
+	crawler.Parse()
+	crawler.PrintResult()
 }
