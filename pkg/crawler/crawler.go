@@ -21,7 +21,7 @@ type MyCrawler struct {
 func (m *MyCrawler) Parse() {
 	c := colly.NewCollector(colly.AllowedDomains(m.urlName))
 
-	c.OnHTML("aside.NavigationDrawer a[href]", func(h *colly.HTMLElement) {
+	c.OnHTML("a[href]", func(h *colly.HTMLElement) {
 		href := h.Attr("href")
 
 		text := h.Text
