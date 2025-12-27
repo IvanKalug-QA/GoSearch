@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
 )
@@ -24,13 +25,14 @@ func (m *MyCrawler) Parse() {
 	c.OnHTML("a[href]", func(h *colly.HTMLElement) {
 		href := h.Attr("href")
 
-		text := h.Text
+		text := strings.TrimSpace(h.Text)
 
 		fullUrl := h.Request.AbsoluteURL(href)
 
-		m.parserLinks++
-
-		m.results = append(m.results, []string{fullUrl, text})
+		if len(text) > 1 && len(fullUrl) > 1 {
+			m.parserLinks++
+			m.results = append(m.results, []string{fullUrl, text})
+		}
 	})
 
 	c.OnError(func(r *colly.Response, err error) {
@@ -49,6 +51,7 @@ func (m *MyCrawler) PrintResult() {
 		fmt.Printf("TEXT: %v\n", e[1])
 		fmt.Println("============================")
 	}
+	fmt.Printf("Total link will be find: %v", m.parserLinks)
 }
 
 func CreateCrawler(urlParse, nameUrlParse string) *MyCrawler {
