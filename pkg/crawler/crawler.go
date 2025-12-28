@@ -10,14 +10,14 @@ import (
 
 type Crawler interface {
 	Parse()
-	PrintResult()
+	PrintFind()
 }
 
 type MyCrawler struct {
 	url         string
 	urlName     string
 	parserLinks int
-	results     []index.Document
+	Results     []index.Document
 }
 
 func (m *MyCrawler) Parse() {
@@ -32,8 +32,8 @@ func (m *MyCrawler) Parse() {
 
 		if len(textWithUrl) > 1 && len(fullUrl) > 1 {
 			m.parserLinks++
-			m.results = append(
-				m.results,
+			m.Results = append(
+				m.Results,
 				index.Document{
 					ID:    m.parserLinks,
 					URL:   fullUrl,
@@ -51,8 +51,8 @@ func (m *MyCrawler) Parse() {
 	}
 }
 
-func (m *MyCrawler) PrintResult() {
-	for _, e := range m.results {
+func (m *MyCrawler) PrintFind() {
+	for _, e := range m.Results {
 		fmt.Println(e)
 	}
 	fmt.Printf("Total link will be find: %v", m.parserLinks)
@@ -62,6 +62,6 @@ func CreateCrawler(urlParse, nameUrlParse string) *MyCrawler {
 	return &MyCrawler{
 		url:     urlParse,
 		urlName: nameUrlParse,
-		results: make([]index.Document, 0),
+		Results: make([]index.Document, 0),
 	}
 }
