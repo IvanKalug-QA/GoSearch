@@ -1,8 +1,9 @@
 package crawler
 
 import (
+	"GoSearch/pkg/index"
+	"GoSearch/utils/text"
 	"fmt"
-	"strings"
 
 	"github.com/gocolly/colly"
 )
@@ -16,7 +17,7 @@ type MyCrawler struct {
 	url         string
 	urlName     string
 	parserLinks int
-	results     [][]string
+	results     []index.Document
 }
 
 func (m *MyCrawler) Parse() {
@@ -25,13 +26,19 @@ func (m *MyCrawler) Parse() {
 	c.OnHTML("a[href]", func(h *colly.HTMLElement) {
 		href := h.Attr("href")
 
-		text := strings.TrimSpace(h.Text)
+		textWithUrl := text.SimpleNormalize(h.Text)
 
 		fullUrl := h.Request.AbsoluteURL(href)
 
-		if len(text) > 1 && len(fullUrl) > 1 {
+		if len(textWithUrl) > 1 && len(fullUrl) > 1 {
 			m.parserLinks++
-			m.results = append(m.results, []string{fullUrl, text})
+			m.results = append(
+				m.results,
+				index.Document{
+					ID:    m.parserLinks,
+					URL:   fullUrl,
+					Title: textWithUrl,
+				})
 		}
 	})
 
@@ -46,10 +53,7 @@ func (m *MyCrawler) Parse() {
 
 func (m *MyCrawler) PrintResult() {
 	for _, e := range m.results {
-		fmt.Println("============================")
-		fmt.Printf("URL: %v\n", e[0])
-		fmt.Printf("TEXT: %v\n", e[1])
-		fmt.Println("============================")
+		fmt.Println(e)
 	}
 	fmt.Printf("Total link will be find: %v", m.parserLinks)
 }
@@ -58,6 +62,6 @@ func CreateCrawler(urlParse, nameUrlParse string) *MyCrawler {
 	return &MyCrawler{
 		url:     urlParse,
 		urlName: nameUrlParse,
-		results: make([][]string, 0),
+		results: make([]index.Document, 0),
 	}
 }
