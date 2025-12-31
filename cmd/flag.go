@@ -2,10 +2,10 @@ package main
 
 import "flag"
 
-var search string
+var searchParam string
 
 func ParseArgs() {
-	flag.StringVar(&search, "s", "", "String can be found")
+	flag.StringVar(&searchParam, "s", "", "String can be found")
 
 	flag.Parse()
 }

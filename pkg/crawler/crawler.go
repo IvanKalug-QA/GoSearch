@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"GoSearch/pkg/index"
+	"GoSearch/pkg/search"
 	"GoSearch/utils/text"
 	"fmt"
 
@@ -10,7 +11,8 @@ import (
 
 type Crawler interface {
 	Parse()
-	PrintFind()
+	PrintParsed()
+	ShowResult(s string)
 }
 
 type MyCrawler struct {
@@ -51,11 +53,19 @@ func (m *MyCrawler) Parse() {
 	}
 }
 
-func (m *MyCrawler) PrintFind() {
+func (m *MyCrawler) PrintParsed() {
 	for _, e := range m.Results {
 		fmt.Println(e)
 	}
 	fmt.Printf("Total link will be find: %v", m.parserLinks)
+}
+
+func (m *MyCrawler) ShowResult(s string) {
+	indexDoc := index.CreateIndex(m.Results)
+	output := search.Search(s, indexDoc, m.Results)
+	for _, o := range output {
+		fmt.Println(o)
+	}
 }
 
 func CreateCrawler(urlParse, nameUrlParse string) *MyCrawler {
