@@ -1,11 +1,11 @@
-package text
+package file
 
 import (
 	"fmt"
 	"os"
 )
 
-func WriteFile(d []string) {
+func Write(d []string) {
 	file, err := os.OpenFile("results.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Printf("Ошибка открытия файла: %v\n", err)

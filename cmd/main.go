@@ -2,7 +2,7 @@ package main
 
 import (
 	c "GoSearch/pkg/crawler"
-	"GoSearch/utils/text"
+	"GoSearch/utils/file"
 	"fmt"
 	"os"
 )
@@ -18,5 +18,5 @@ func main() {
 	if len(output) == 0 {
 		fmt.Println("По вашему запросу ничего не было найдено(")
 	}
-	text.WriteFile(output)
+	file.Write(output)
 }
