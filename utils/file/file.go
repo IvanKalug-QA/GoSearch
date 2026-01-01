@@ -1,8 +1,10 @@
 package file
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func Write(d []string) {
@@ -19,4 +21,22 @@ func Write(d []string) {
 			return
 		}
 	}
+}
+
+func HasFile(fileName string) (*os.File, error) {
+	file, err := os.OpenFile(fileName, os.O_RDONLY, 0644)
+	return file, err
+}
+
+func ReadUrl(fileName string) []string {
+	f, _ := HasFile(fileName)
+	if f == nil {
+		return nil
+	}
+	var urls []string
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		urls = append(urls, strings.TrimSpace(scanner.Text()))
+	}
+	return urls
 }

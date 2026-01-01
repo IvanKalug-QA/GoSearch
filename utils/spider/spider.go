@@ -6,9 +6,23 @@ import (
 	"fmt"
 )
 
+const (
+	DEFAULT_URL string = "https://go.dev"
+	FILE_URLS   string = "urls.txt"
+)
+
 func RunSpiner(searchResult string) {
-	var crawler c.Crawler = c.CreateCrawler("https://go.dev")
-	crawler.Parse()
+	f := file.ReadUrl(FILE_URLS)
+
+	var crawler c.Crawler
+
+	if f != nil {
+		crawler = c.New(f)
+		crawler.Parse()
+	} else {
+		crawler = c.New([]string{DEFAULT_URL})
+		crawler.Parse()
+	}
 	output := crawler.GetResult(searchResult)
 	if len(output) == 0 {
 		fmt.Println("По вашему запросу ничего не было найдено(")

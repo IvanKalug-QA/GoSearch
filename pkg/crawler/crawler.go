@@ -5,6 +5,8 @@ import (
 	"GoSearch/pkg/search"
 	"GoSearch/utils/text"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/gocolly/colly"
 )
@@ -16,7 +18,7 @@ type Crawler interface {
 }
 
 type MyCrawler struct {
-	url         string
+	urls        []string
 	parserLinks int
 	Results     []index.Document
 }
@@ -36,7 +38,7 @@ func (m *MyCrawler) Parse() {
 			m.Results = append(
 				m.Results,
 				index.Document{
-					ID:    m.parserLinks,
+					ID:    int(time.Now().UnixNano()) + rand.Intn(1000),
 					URL:   fullUrl,
 					Title: textWithUrl,
 				})
@@ -46,14 +48,16 @@ func (m *MyCrawler) Parse() {
 	c.OnError(func(r *colly.Response, err error) {
 		// Обработка ошибок
 	})
-	err := c.Visit(m.url)
-	if err != nil {
-		panic(err)
+	for _, u := range m.urls {
+		err := c.Visit(u)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
 func (m *MyCrawler) CountLinkParsed() {
-	fmt.Printf("Total link will be parsing: %v", m.parserLinks)
+	fmt.Printf("Total link will be parsing: %d", m.parserLinks)
 }
 
 func (m *MyCrawler) GetResult(s string) []string {
@@ -62,9 +66,9 @@ func (m *MyCrawler) GetResult(s string) []string {
 	return output
 }
 
-func CreateCrawler(urlParse string) *MyCrawler {
+func New(urlParse []string) *MyCrawler {
 	return &MyCrawler{
-		url:     urlParse,
-		Results: make([]index.Document, 0),
+		urls:    urlParse,
+		Results: make([]index.Document, 0, 5),
 	}
 }
