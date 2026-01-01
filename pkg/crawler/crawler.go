@@ -11,7 +11,7 @@ import (
 
 type Crawler interface {
 	Parse()
-	PrintParsed()
+	CountLinkParsed()
 	GetResult(s string) []string
 }
 
@@ -53,11 +53,8 @@ func (m *MyCrawler) Parse() {
 	}
 }
 
-func (m *MyCrawler) PrintParsed() {
-	for _, e := range m.Results {
-		fmt.Println(e)
-	}
-	fmt.Printf("Total link will be find: %v", m.parserLinks)
+func (m *MyCrawler) CountLinkParsed() {
+	fmt.Printf("Total link will be parsing: %v", m.parserLinks)
 }
 
 func (m *MyCrawler) GetResult(s string) []string {
