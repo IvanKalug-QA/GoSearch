@@ -12,7 +12,7 @@ import (
 type Crawler interface {
 	Parse()
 	PrintParsed()
-	ShowResult(s string)
+	GetResult(s string) []string
 }
 
 type MyCrawler struct {
@@ -60,12 +60,10 @@ func (m *MyCrawler) PrintParsed() {
 	fmt.Printf("Total link will be find: %v", m.parserLinks)
 }
 
-func (m *MyCrawler) ShowResult(s string) {
+func (m *MyCrawler) GetResult(s string) []string {
 	indexDoc := index.CreateIndex(m.Results)
 	output := search.Search(s, indexDoc, m.Results)
-	for _, o := range output {
-		fmt.Println(o)
-	}
+	return output
 }
 
 func CreateCrawler(urlParse, nameUrlParse string) *MyCrawler {
