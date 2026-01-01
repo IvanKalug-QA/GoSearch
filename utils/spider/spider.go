@@ -7,7 +7,7 @@ import (
 )
 
 func RunSpiner(searchResult string) {
-	var crawler c.Crawler = c.CreateCrawler("https://go.dev", "go.dev")
+	var crawler c.Crawler = c.CreateCrawler("https://go.dev")
 	crawler.Parse()
 	output := crawler.GetResult(searchResult)
 	if len(output) == 0 {

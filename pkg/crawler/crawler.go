@@ -17,13 +17,12 @@ type Crawler interface {
 
 type MyCrawler struct {
 	url         string
-	urlName     string
 	parserLinks int
 	Results     []index.Document
 }
 
 func (m *MyCrawler) Parse() {
-	c := colly.NewCollector(colly.AllowedDomains(m.urlName))
+	c := colly.NewCollector()
 
 	c.OnHTML("a[href]", func(h *colly.HTMLElement) {
 		href := h.Attr("href")
@@ -63,10 +62,9 @@ func (m *MyCrawler) GetResult(s string) []string {
 	return output
 }
 
-func CreateCrawler(urlParse, nameUrlParse string) *MyCrawler {
+func CreateCrawler(urlParse string) *MyCrawler {
 	return &MyCrawler{
 		url:     urlParse,
-		urlName: nameUrlParse,
 		Results: make([]index.Document, 0),
 	}
 }
