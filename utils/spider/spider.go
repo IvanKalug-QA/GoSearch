@@ -2,8 +2,9 @@ package spider
 
 import (
 	c "GoSearch/pkg/crawler"
+	"GoSearch/pkg/netsrv"
 	"GoSearch/utils/file"
-	"fmt"
+	"GoSearch/utils/text"
 )
 
 const (
@@ -13,20 +14,23 @@ const (
 
 func RunSpiner(searchResult string) {
 	f := file.ReadUrl(FILE_URLS)
-
-	var crawler c.Crawler
+	var searchUrls []string
 
 	if f != nil {
-		crawler = c.New(f)
-		crawler.Parse()
+		searchUrls = f
 	} else {
-		crawler = c.New([]string{DEFAULT_URL})
+		searchUrls = []string{DEFAULT_URL}
+	}
+
+	if searchResult != "" {
+		var crawler c.Crawler
+		crawler = c.New(searchUrls)
 		crawler.Parse()
+		output := crawler.GetResult(searchResult)
+		if text.CheckResult(output) {
+			file.Write(output)
+		}
+	} else {
+		netsrv.StartServer(searchUrls)
 	}
-	output := crawler.GetResult(searchResult)
-	if len(output) == 0 {
-		fmt.Println("По вашему запросу ничего не было найдено(")
-		return
-	}
-	file.Write(output)
 }

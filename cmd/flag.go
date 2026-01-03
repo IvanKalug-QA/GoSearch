@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"os"
 )
 
 var searchParam string
@@ -12,7 +11,4 @@ func ParseArgs() {
 
 	flag.Parse()
 
-	if searchParam == "" {
-		os.Exit(1)
-	}
 }
