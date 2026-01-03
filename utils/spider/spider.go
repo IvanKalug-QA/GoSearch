@@ -22,15 +22,17 @@ func RunSpiner(searchResult string) {
 		searchUrls = []string{DEFAULT_URL}
 	}
 
+	var crawler c.Crawler
+
+	crawler = c.New(searchUrls)
+	crawler.Parse()
+
 	if searchResult != "" {
-		var crawler c.Crawler
-		crawler = c.New(searchUrls)
-		crawler.Parse()
 		output := crawler.GetResult(searchResult)
 		if text.CheckResult(output) {
 			file.Write(output)
 		}
 	} else {
-		netsrv.StartServer(searchUrls)
+		netsrv.StartServer(crawler)
 	}
 }

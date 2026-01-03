@@ -10,18 +10,13 @@ import (
 	"time"
 )
 
-func handler(conn net.Conn, searchUrls []string) {
+func handler(conn net.Conn, crawler c.Crawler) {
 	defer conn.Close()
 	defer fmt.Println("Connection closed")
 
 	conn.SetDeadline(time.Now().Add(time.Second * 30))
 
 	r := bufio.NewReader(conn)
-
-	var crawler c.Crawler
-
-	crawler = c.New(searchUrls)
-	crawler.Parse()
 
 	for {
 		msg, _, err := r.ReadLine()
@@ -37,7 +32,7 @@ func handler(conn net.Conn, searchUrls []string) {
 	}
 }
 
-func StartServer(searchUrls []string) {
+func StartServer(crawler c.Crawler) {
 	listener, err := net.Listen("tcp4", ":80")
 	if err != nil {
 		panic(err)
@@ -48,6 +43,6 @@ func StartServer(searchUrls []string) {
 			panic(err)
 		}
 		fmt.Printf("Accept connect to -> %v\n", conn.RemoteAddr().String())
-		go handler(conn, searchUrls)
+		go handler(conn, crawler)
 	}
 }
