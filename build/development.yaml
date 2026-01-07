@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: go_search-deployment
+spec:
+  selector:
+    matchLabels:
+      appname: go_search
+    replicas: 5
+    template:
+      metadata:
+        labels:
+          appname: go_search
+      spec:
+        containers:
+          - name: go_search
+            image: kaluginivan/go_search:latest
+            ports:
+              - containerPort: 8080
+
+# kubectl port-forward deployment.apps/microapp-deployment 8080:8080 
